@@ -1,0 +1,23 @@
+import cv2
+import face_recognition
+
+img1 = cv2.imread(r"C:\Users\hp\Desktop\final year project\images\elonmusk.jpeg")
+img2 = cv2.imread(r"C:\Users\hp\Desktop\final year project\images\messi.jpeg")
+
+rgb_img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+rgb_img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+
+encoding1 = face_recognition.face_encodings(rgb_img1)
+encoding2 = face_recognition.face_encodings(rgb_img2)
+
+result = face_recognition.compare_faces(encoding1, encoding2[0])
+if result:
+    print("Faces match!")
+    # Do something if faces match
+    # For example, return True
+    # return True
+else:
+    print("Faces do not match!")
+    # Do something if faces do not match
+    # For example, return False
+    # return False
