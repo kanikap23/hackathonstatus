@@ -1,0 +1,39 @@
+import cv2
+import face_recognition
+import requests
+import numpy as np
+import os
+
+# Read image from URL
+#url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSszCsJN7-pNRsDg5-M85eazmrCt9iJYVqv0YzCuGS9zw&s"
+url = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ_cncVk0mzkpRajMerGW_puk2TNbPsu1jS3vc9AfCy_qOH6E27"  # Example URL
+response = requests.get(url)
+img_array = np.array(bytearray(response.content), dtype=np.uint8)
+img = cv2.imdecode(img_array, -1)
+rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+url_encoding = face_recognition.face_encodings(rgb_img)[0]
+
+# Folder where multiple saved images are present
+folder_path = "C:/Users/hp/Desktop/final year project/images"
+
+# Get the list of files in the folder
+file_names = os.listdir(folder_path)
+
+# Filter only image files
+image_files = [file_name for file_name in file_names if file_name.endswith(('.jpg', '.jpeg', '.png', '.bmp'))]
+
+# Flag to indicate if a match is found
+match_found = False
+
+# Compare the URL image with each saved image until a match is found
+for image_file in image_files:
+    img2 = cv2.imread(os.path.join(folder_path, image_file))
+    rgb_img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+    saved_encoding = face_recognition.face_encodings(rgb_img2)[0]
+    result = face_recognition.compare_faces([url_encoding], saved_encoding)[0]
+    if result:
+        match_found = True
+        break
+
+# Print the result
+print("Result:", match_found)
