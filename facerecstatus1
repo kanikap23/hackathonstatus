@@ -1,23 +1,28 @@
-import cv2
-import face_recognition
+try:
+        
+response = requests.get("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVMTIYFCDJtC6v850cXnT4YzwzcMrzm_XUgbwGMqX-XA&s")#url aaya 
+img_array = np.array(bytearray(response.content), dtype=np.uint8)#url ka content array m convert hua 
+img = cv2.imdecode(img_array, -1)#use read kia gya aur -1 isliye kuki original aumatically read krega rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)#isme hua bgr se rgb conversion
+url_encoding = face_recognition.face_encodings(rgb_img)[0]#yaha hui url ki encoding
 
-img1 = cv2.imread(r"C:\Users\hp\Desktop\final year project\images\elonmusk.jpeg")
-img2 = cv2.imread(r"C:\Users\hp\Desktop\final year project\images\messi.jpeg")
+        # Folder where multiple saved images are present
+folder_path = "images/"#yaha pe vo path jaha images save ho rhi h
 
-rgb_img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
-rgb_img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+        # Get the list of files in the folder
+file_names = os.listdir(folder_path)
 
-encoding1 = face_recognition.face_encodings(rgb_img1)
-encoding2 = face_recognition.face_encodings(rgb_img2)
+        # Compare the URL image with each saved image until a match is found
+for image_file in file_names:
+img2 = cv2.imread(os.path.join(folder_path, image_file))#saved images ko read kr rhe h 
+rgb_img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)#yaha pe conversion
+saved_encoding = face_recognition.face_encodings(rgb_img2)[0]#yaha image encoding
+result = face_recognition.compare_faces([url_encoding], saved_encoding)[0]#yaha pe dono encoded valo ko compare 
+    if result:
+        return True
 
-result = face_recognition.compare_faces(encoding1, encoding2[0])
-if result:
-    print("Faces match!")
-    # Do something if faces match
-    # For example, return True
-    # return True
-else:
-    print("Faces do not match!")
-    # Do something if faces do not match
-    # For example, return False
-    # return False
+        # If no match found
+    return False
+
+except Exception as e:
+        print("Error:", e)
+        return False
