@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import { uploadOnCloudinary } from "../cloudStorage.js"
 import { upload } from "../middlewares/multer.middleware.js"
 import { BUS } from "../model/busModel.js"
+import { ADMIN } from "../model/adminModel.js"
 
 export const updateDriver=async function(req,res)
 {
@@ -44,4 +45,80 @@ export const updateDriver=async function(req,res)
             message:"driver updated",
             data:ans
     })
+}
+
+export const registerAdmin=async function(req,res)
+{
+    //getting details from frontend
+    try {
+        const {userName,contactNumber,password}=req.body
+    
+        if([userName,contactNumber,password].some((ele)=>ele === ""))
+        {
+            return res.status(400).json({
+                success:false,
+                message:"All fields are necessary"
+            })
+        }
+    
+        const newAdmin=await ADMIN.create({
+            userName,
+            contactNumber,
+            password
+        })
+    
+        if(!newAdmin)
+            return res.status(400).json({
+            success:false,
+            message:"error in creating new admin"})
+        
+        return res.status(200).json({
+            success:true,
+            message:"admin successfully created",
+            data:newAdmin
+        })
+    } catch (error) {
+        console.log(error.message)   
+    }
+}
+
+export const loginAdmin=async function(req,res)
+{
+    try {
+        const {contactNumber,password}=req.body
+
+        if([contactNumber,password].some((ele)=>ele === ""))
+            {
+                return res.status(400).json({
+                    success:false,
+                    message:"All fields are necessary"
+                })
+            }
+        
+        const gotDriver=await ADMIN.findOne({contactNumber})
+        
+        console.log(gotDriver)
+
+        if(gotDriver === "")
+            return res.status(400).json({
+                success:false,
+                message:"cannot find driver"
+            })
+        
+        const checkingPassword=await gotDriver.checkPassword(password)
+
+        if(!checkingPassword)
+            return res.status(400).json({
+                success:false,
+                message:"password not correct"
+            })
+        
+        return res.status(200).json({
+                success:true,
+                message:"correct password",
+                data:gotDriver
+        })
+    } catch (error) {
+        console.log(error.message)
+    }
 }
