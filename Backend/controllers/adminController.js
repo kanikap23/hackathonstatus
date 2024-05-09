@@ -52,7 +52,7 @@ export const registerAdmin=async function(req,res)
     //getting details from frontend
     try {
         const {userName,contactNumber,password}=req.body
-    
+        console.log(req.body)
         if([userName,contactNumber,password].some((ele)=>ele === ""))
         {
             return res.status(400).json({
@@ -60,7 +60,18 @@ export const registerAdmin=async function(req,res)
                 message:"All fields are necessary"
             })
         }
-    
+        
+        const findAdmin=await ADMIN.findOne({$or:[{userName},{contactNumber},{password}]})
+        console.log(findAdmin)
+        if(findAdmin)
+            {
+                console.log("yaha aai")
+                return res.status(200).json({
+                success:false,
+                message:"admin already exists"
+            })
+            console.log("error")
+        }
         const newAdmin=await ADMIN.create({
             userName,
             contactNumber,
@@ -99,10 +110,10 @@ export const loginAdmin=async function(req,res)
         
         console.log(gotDriver)
 
-        if(gotDriver === "")
-            return res.status(400).json({
+        if(gotDriver === null)
+            return res.status(200).json({
                 success:false,
-                message:"cannot find driver"
+                message:"cannot find driver register first"
             })
         
         const checkingPassword=await gotDriver.checkPassword(password)
