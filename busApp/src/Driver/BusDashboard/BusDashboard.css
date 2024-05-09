@@ -1,0 +1,31 @@
+.map-container {
+  margin-top: 30px;
+  width: 95%;
+  margin-right: 50px;
+  height: 50vh;
+}
+
+.leaflet-left {
+  display: none;
+}
+
+.leaflet-bottom {
+  display: none;
+}
+
+.leaflet-right {
+  display: none;
+  padding: 10px;
+}
+
+.leaflet-routing-container {
+  background-color: red;
+}
+
+.leaflet-routing-alternatives-container {
+  padding: 5px;
+}
+
+.leaflet-routing-alt {
+  padding: 5px;
+}
