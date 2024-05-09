@@ -147,26 +147,28 @@ function LoginDriver() {
               )}
             </div>
             {!webCamLoader && (
-              <button
-                className=" w-32 h-7 ml-14 justify-between items-center bg-red-500 text-white rounded-xl mt-4 cursor-pointer"
-                onClick={capturePhoto}
-              >
-                {toggleImg}
-              </button>
+              <div className="mb-4">
+                <button
+                  className=" w-32 h-7 ml-14 justify-between items-center bg-red-500 text-white rounded-xl cursor-pointer mb-4"
+                  onClick={capturePhoto}
+                >
+                  {toggleImg}
+                </button>
+              </div>
             )}
           </div>
           <div className="flex flex-col items-center justify-center mt-12">
-            <h1 className="text-[#717171] text-[15px] mt-10">
+            {/* <h1 className="text-[#717171] text-[15px] mt-10">
               Don't have an account ?{" "}
               <button onClick={changePage} className="text-[#E93F4B]">
                 Register
               </button>
-            </h1>
+            </h1> */}
             {isLoading ? (
-              <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-b-4 border-l-3 border-r-3 border-yellow-500 mx-auto"></div>
+              <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-b-4 border-l-3 border-r-3 border-yellow-500 mx-auto my-6"></div>
             ) : (
               <button
-                className="px-10 py-2 w-[200px] rounded-full font-bold  text-white bg-[#E93F4B] hover:text-gray-300 text-[20px]"
+                className="px-10 py-2 w-[200px] rounded-full font-bold  text-white bg-[#E93F4B] hover:text-gray-300 text-[20px] mb-6 relative top-8"
                 onClick={loginDriver}
               >
                 Log in
