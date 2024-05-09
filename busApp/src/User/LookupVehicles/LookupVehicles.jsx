@@ -54,7 +54,7 @@ function LoadMap() {
   );
 }
 
-function Card({ busNumber, route, active, objectId, eta, rating, click }) {
+function Card({ driverName,busNumber, route, active, objectId, eta, rating, click }) {
   const setRoute = useContext(RouteContext).setRoute;
   return (
     <div
@@ -65,12 +65,7 @@ function Card({ busNumber, route, active, objectId, eta, rating, click }) {
       className="ml-2 rounded-2xl bg-[#E93F4B] w-[400px] h-[190px] text-white p-4"
     >
       <h1 className={"font-bold text-2xl"}>
-        ETA:{" "}
-        {eta
-          ? eta.progress
-            ? eta.progress[eta.progress.length - 1].eta
-            : "N/A"
-          : "N/A"}
+        Driver:{" "} {driverName[0].toUpperCase()+driverName.substring(1,).toLowerCase()}
       </h1>
       <div className={""}>
         <div className={"flex flex-row gap-[5px] items-center"}>
@@ -135,7 +130,7 @@ export function LookupVehicles() {
     if (!busRoutes) return;
     let filteredRoutes = busRoutes.filter((route) => {
       return route.stations.some((station) => {
-        return station.stationName === search;
+        return station.stationName === search.toLowerCase();
       });
     });
 
@@ -236,6 +231,7 @@ export function LookupVehicles() {
               ) : (
                 dataReceived.map((ele) => (
                   <Card
+                    driverName={ele.driver.name}
                     busNumber={ele.busNumber}
                     rating={ele.avgRating}
                     route={ele.route}
