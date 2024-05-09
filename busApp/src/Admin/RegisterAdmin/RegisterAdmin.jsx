@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { SERVER_URL } from "../../Constants/config";
-import LoginDriver from "../LoginDriver/LoginDriver";
+import { SERVER_URL , axiosConfig} from "../../Constants/config";
+import LoginAdmin from "../LoginAdmin/LoginAdmin.jsx";
 import {
   UserSVG,
   PasswordSVG,
@@ -17,10 +17,9 @@ import { ToastContainer, Zoom, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import main from "../../assets/main.jpg";
 
-function RegisterDriver() {
+function RegisterAdmin() {
   let navigate = useNavigate();
-  const [busNumber, setBusNumber] = useState("");
-  const [busNumberPlate, setBusNumberPlate] = useState("");
+ 
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [password, setPassword] = useState("");
@@ -44,11 +43,9 @@ function RegisterDriver() {
 
   async function submitDetails() {
     if (
-      busNumber !== "" &&
-      busNumberPlate !== "" &&
       name !== "" &&
       contact !== "" &&
-      password !== "" && fileDetails !== ""
+      password !== ""
     ) {
       setIsLoading(true);
       //checking for password length
@@ -76,41 +73,19 @@ function RegisterDriver() {
         return ;
       }
 
-      regex1=/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/
-
-      if(!regex1.test(busNumberPlate))
-      {
-        toast.error("Incorrect Vehicle Number Plate",toastPayload)
-        setIsLoading(false)
-        return ;
-      }
-
-      regex1=/^[0-9]+$/
-      if(!regex1.test(busNumber))
-        {
-          toast.error("Incorrect Bus Number",toastPayload)
-          setIsLoading(false)
-          return ;
-        }
-
       let payload = {
-        busNumber,
-        busNumberPlate,
-        name,
-        contactInfo: contact,
+        userName:name,
+        contactNumber: contact,
         password,
-        image1: fileDetails,
       };
       console.log(payload);
       const response = await axios.post(
-        `${SERVER_URL}/api/v1/register`,
+        `${SERVER_URL}/api/v1/admin/registerAdmin`,
         payload,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        axiosConfig
       );
+
+      console.log(response)
       setIsLoading(false);
       if (response.data.success === true) {
         toast.success("Registered Successfully", toastPayload);
@@ -156,51 +131,7 @@ function RegisterDriver() {
         {page === "Register" ? (
           <div className="mt-[4vh]">
             <div className="flex flex-col items-center space-y-[2vh] h-full ">
-              <div className="flex bg-white border border-black w-[290px] h-[50px] justify-between items-center rounded-lg p-2 shadow-xl relative group">
-                <input
-                  type="text"
-                  id="busNumber"
-                  className="placeholder-black focus:outline-none"
-                  value={busNumber}
-                  onChange={(e) => setBusNumber(e.target.value)}
-                />
-                {busNumber == "" ? (
-                  <label
-                    htmlFor="busNumber"
-                    className="ml-[8px] transform transition-all absolute top-0 left-0 h-full flex items-center pl-2 text-lg group-focus-within:text-xs peer-valid:text-xs group-focus-within:h-1/2 peer-valid:h-1/2 group-focus-within:-translate-y-[2px] peer-valid:-translate-y-full group-focus-within:pl-0 peer-valid:pl-0"
-                  >
-                    Bus Number
-                  </label>
-                ) : (
-                  <label htmlFor="busNumber" className="hidden">
-                    Bus Number
-                  </label>
-                )}
-                <BusNumberSVG />
-              </div>
-
-              <div className="flex bg-white border border-black w-[290px] h-[50px] justify-between items-center rounded-lg p-2 shadow-xl relative group">
-                <input
-                  type="text"
-                  id="busNumberPlate"
-                  value={busNumberPlate}
-                  className="placeholder-black focus:outline-none"
-                  onChange={(e) => setBusNumberPlate(e.target.value)}
-                />
-                {busNumberPlate == "" ? (
-                  <label
-                    htmlFor="busNumberPlate"
-                    className="ml-[8px] transform transition-all absolute top-0 left-0 h-full flex items-center pl-2 text-lg group-focus-within:text-xs peer-valid:text-xs group-focus-within:h-1/2 peer-valid:h-1/2 group-focus-within:-translate-y-[2px] peer-valid:-translate-y-full group-focus-within:pl-0 peer-valid:pl-0"
-                  >
-                    Registration Number
-                  </label>
-                ) : (
-                  <label htmlFor="busNumber" className="hidden">
-                    Registration Number
-                  </label>
-                )}
-                <BusNumberPlate />
-              </div>
+            
 
               <div className="flex bg-white border border-black w-[290px] h-[50px] justify-between items-center rounded-lg p-2 shadow-xl relative group">
                 <input
@@ -277,25 +208,13 @@ function RegisterDriver() {
                 </button>
               </div>
 
-              <div className="flex flex-col items-center h-[0px] w-[290px] relative">
-                <div className="text-[19px] relative -left-[7rem] ">Image:</div>
-                <input
-                  className="text-[#5F5E5E] pb-12 ml border-2 border-red-700 rounded-xl cursor-pointer w-[100%] file:h-12 mt-2"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    setFileDetails(e.target.files[0]);
-                  }}
-                />
-              </div>
-
               <div className="flex flex-col items-center space-y-5 absolute bottom-6    ">
-                {/* <h1 className="text-[15px]">
+                <h1 className="text-[15px]">
                   Have an account already ?{" "}
                   <button onClick={changePage} className="text-[#E93F4B]">
                     Sign In
                   </button>
-                </h1> */}
+                </h1>
                 {isLoading ? (
                   <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-b-4 border-l-3 border-r-3 border-yellow-500 mx-auto"></div>
                 ) : (
@@ -310,7 +229,7 @@ function RegisterDriver() {
             </div>
           </div>
         ) : (
-          <LoginDriver />
+          <LoginAdmin />
         )}
       </div>
       <div>
@@ -321,4 +240,4 @@ function RegisterDriver() {
   );
 }
 
-export default RegisterDriver;
+export default RegisterAdmin;
