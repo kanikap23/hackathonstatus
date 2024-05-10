@@ -5,7 +5,7 @@ import PageContextProvider from "./Context/PageContext.jsx";
 
 
 //testing code goes here
-import RegisterAdmin from "./Admin/RegisterAdmin/RegisterAdmin.jsx";
+// import RegisterAdmin from "./Admin/RegisterAdmin/RegisterAdmin.jsx";
 function App()
 {
     return (
