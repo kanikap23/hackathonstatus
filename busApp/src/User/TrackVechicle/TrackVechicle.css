@@ -4,16 +4,17 @@
   border-radius: 20px;
 }
 
-/**
-pulse feature
-*/
-/* @keyframes ping {
-  75%,
+.alert-blink {
+  animation-name: blink;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes blink {
+  0% {
+    box-shadow: 0 0 0 2em #f4aab9;
+  }
   100% {
-    transform: scale(1);
-    opacity: 0.8;
+    box-shadow: 0 0 0 1em #f4aab9;
   }
 }
-.animate-alert {
-  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-} */

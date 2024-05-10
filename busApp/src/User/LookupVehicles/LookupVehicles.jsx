@@ -20,6 +20,10 @@ const personIcon = new Icon({
 import io from "socket.io-client";
 const socket = io("http://localhost:10000");
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function LoadMap() {
   const [position, setPosition] = useState();
   useEffect(() => {
@@ -54,20 +58,33 @@ function LoadMap() {
   );
 }
 
-function Card({ driverName,busNumber, route, active, objectId, eta, rating, click }) {
+function Card({
+  driverName,
+  busNumber,
+  route,
+  active,
+  objectId,
+  eta,
+  rating,
+  click,
+}) {
   const setRoute = useContext(RouteContext).setRoute;
+  console.log("route.stations", route.stations.length);
   return (
     <div
       onClick={() => {
         click(busNumber);
         setRoute(route);
       }}
-      className="ml-2 rounded-2xl bg-[#E93F4B] w-[400px] h-[190px] text-white p-4"
+      className="ml-2 rounded-2xl bg-[#E93F4B] w-[400px] h-[190px] text-white p-4 relative"
     >
       <h1 className={"font-bold text-2xl"}>
-        Driver:{" "} {driverName[0].toUpperCase()+driverName.substring(1,).toLowerCase()}
+        {capitalizeFirstLetter(route.stations[0].stationName)}-
+        {capitalizeFirstLetter(
+          route.stations[route.stations.length - 1].stationName
+        )}
       </h1>
-      <div className={""}>
+      {/* <div>
         <div className={"flex flex-row gap-[5px] items-center"}>
           <div className="w-3 h-3 bg-[#38B3F9] rounded-full "></div>
           <p className={"p-0 m-0"}>
@@ -79,30 +96,34 @@ function Card({ driverName,busNumber, route, active, objectId, eta, rating, clic
           <div className="w-3 h-3 bg-[#38B3F9] rounded-full "></div>
           <p className={"p-0 m-0"}>{route.stations[0].stationName}</p>
         </div>
-      </div>
-      <div className={"relative top-[-35px]"}>
-        <h1 className={"font-bold ml-[75%]"}>Bus: {busNumber}</h1>
-        <div className={"ml-[75%]"}>
-          <p className={"text-yellow-300 text-xl"}>
-            {Array(Number(Math.round(rating)))
-              .fill("*")
-              .map((e, i) => (
-                <span key={i}>*</span>
-              ))}
-            {Array(Number(5 - Math.round(rating)))
-              .fill("*")
-              .map((e, i) => (
-                <span key={i} className={"text-white"}>
-                  *
-                </span>
-              ))}
-            <span className={"text-white text-[13px]"}></span>
-          </p>
+      </div> */}
+      <div className={"relative top-[-35px] "}>
+        <div className="absolute -bottom-32 right-4">
+          <div className="flex">
+            <h1 className={"font-bold text-xl"}>Bus: {busNumber}</h1>
+          </div>
+          <div className={""}>
+            <p className={"text-yellow-300 text-xl ml-3"}>
+              {Array(Number(Math.round(rating)))
+                .fill("*")
+                .map((e, i) => (
+                  <span key={i}>*</span>
+                ))}
+              {Array(Number(5 - Math.round(rating)))
+                .fill("*")
+                .map((e, i) => (
+                  <span key={i} className={"text-white"}>
+                    *
+                  </span>
+                ))}
+              <span className={"text-white text-[13px]"}></span>
+            </p>
+          </div>
         </div>
         <Link to={`/user/trackVehicle/${objectId}`}>
           <button
             className={
-              "w-[98%] border-[1px] drop-shadow-md border-black bg-[#38B3F9] h-[35px] text-black rounded-2xl"
+              "w-[98%] border-[1px] drop-shadow-md border-black bg-[#38B3F9] h-[35px] text-black rounded-2xl absolute -bottom-[10.5rem]"
             }
           >
             View Bus &#x2192;

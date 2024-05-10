@@ -70,7 +70,15 @@ function PanicButton({ busDetails }) {
   useEffect(() => {
     socket.on("sendAlarm", (payload) => {
       console.log("alert payload ", payload);
-      toast.warn("An Emergency Occured", {
+
+      axios
+        .get(
+          `https://api.geoapify.com/v1/geocode/reverse?lat=${payload.latitude}&lon=${payload.longitude}&apiKey=9ada7ada2093459b907a5a079ecf9718`
+        )
+        .then((response) => console.log(response));
+      //api.geoapify.com/v1/geocode/reverse?lat=51.21709661403662&lon=6.7782883744862374&apiKey=9ada7ada2093459b907a5a079ecf9718", requestOptions
+
+      https: toast.warn("An Emergency Occured", {
         autoClose: 1000,
         position: "top-center",
         theme: "dark",
@@ -121,7 +129,7 @@ function PanicButton({ busDetails }) {
     <>
       <div className="mt-10 flex flex-col items-center mb-[30px]">
         <button
-          className="w-[100px] h-[100px] bg-red-600 border-2 border-red-700 rounded-full text-white text-[20px] focus:outline-none absolute overflow-hidden transform transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-0.5 active:bg-red-700 active:scale-95 shadow-custom2 left-16 bottom-24"
+          className="w-[100px] h-[100px] bg-red-600 border-2 border-red-700 rounded-full text-white text-[20px] focus:outline-none absolute overflow-hidden transform transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-0.5 active:bg-red-700 active:scale-95 shadow-custom2 right-16 bottom-24"
           onClick={panic}
         >
           PANIC!
@@ -134,23 +142,26 @@ function PanicButton({ busDetails }) {
           {/* FIXME: */}
           {/* Changes */}
           {panicDetails.alertSignal === true ? (
-            <div className="w-[400px] h-[100px] border-2 bg-red-600 text-white absolute">
+            <div className="w-[350px] aspect-auto  bg-red-600 text-white absolute p-4 left-[45%] rounded-xl alert-blink">
               <h1>Bus ID :-{panicDetails.alertId}</h1>
               <h1>Alert Latitude :- {panicDetails.alertLatitude} </h1>
               <h1>Alert Longitude :- {panicDetails.alertLongitude}</h1>
-              <button
-                onClick={() => {
-                  if (audio) {
-                    console.log(audio);
-                    audio.pause();
-                    setAudio(null);
-                  }
-                  setPanicDetails({ ...panicDetails, alertSignal: false });
-                }}
-                className="bg-red-700 text-white "
-              >
-                Ignore Notification
-              </button>
+              <h1></h1>
+              <div className="flex justify-center">
+                <button
+                  onClick={() => {
+                    if (audio) {
+                      console.log(audio);
+                      audio.pause();
+                      setAudio(null);
+                    }
+                    setPanicDetails({ ...panicDetails, alertSignal: false });
+                  }}
+                  className="bg-black text-white p-[0.4rem] rounded-xl mt-2 "
+                >
+                  Ignore Notification
+                </button>
+              </div>
             </div>
           ) : (
             <h1></h1>
@@ -265,28 +276,30 @@ function Card({
 }) {
   const { id } = useParams();
   return (
-    <div className="flex flex-col space-y-5 items-center justify-between mb-[30px]">
-      <div className="rounded-[20px] bg-[#E93F4B] w-[30vw] text-white pt-4 pb-4 pl-6 pr-6 space-y-3 shadow-custom mt-[7vh] ml-32">
-        <h1>Bus Number :{busNumber}</h1>
-        <h1>Bus Number Plate : {busNumberPlate}</h1>
-        <h1>Driver Name : {name}</h1>
-        <h2>Driver Contact Information : {contactInfo}</h2>
-        <div className="flex">
-          Bus Status : &nbsp;{" "}
-          {busStatus === "active" ? (
-            <h1 className="w-[20px] h-[20px] rounded-full animate-pulse bg-green-600"></h1>
-          ) : (
-            <h1 className="w-[20px] h-[20px]rounded-full animate-pulse bg-red-600"></h1>
-          )}
+    <>
+      <div className="flex flex-col items-center justify-between mb-[30px]">
+        <div className="rounded-[20px] bg-[#E93F4B] w-[32vw] text-white pt-4 pb-4 pl-6 pr-6 space-y-2 shadow-custom  absolute left bottom-16">
+          <h1>Bus Number :{busNumber}</h1>
+          <h1>Bus Number Plate : {busNumberPlate}</h1>
+          <h1>Driver Name : {name}</h1>
+          <h2 className="">Driver Contact Information : {contactInfo}</h2>
+          <div className="flex">
+            Bus Status : &nbsp;{" "}
+            {busStatus === "active" ? (
+              <h1 className="w-[20px] h-[20px] rounded-full animate-pulse bg-green-600"></h1>
+            ) : (
+              <h1 className="w-[20px] h-[20px]rounded-full animate-pulse bg-red-600"></h1>
+            )}
+          </div>
         </div>
       </div>
-      <div className="text-[#9A9A9A] ml-32">
+      <div className="text-[#9A9A9A]  absolute bottom-2 left-1/2 -translate-x-1/2">
         Enjoying your ride?{" "}
         <Link to={`/user/feedback/${id}`} className="text-red-600">
           Provide feedback
         </Link>
       </div>
-    </div>
+    </>
   );
 }
 

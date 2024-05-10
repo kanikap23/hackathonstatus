@@ -17,7 +17,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "./LoginAdmin.css";
 function LoginAdmin() {
- 
   let navigate = useNavigate();
   const [contactNumber, setcontactNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -49,47 +48,46 @@ function LoginAdmin() {
     }
 
     if (contactNumber !== "" && password !== "") {
-        if(password.length < 6)
-        {
-          toast.error("Password should be atleast of 6 ",toastPayload)
-          setIsLoading(false)
-          return ;
-        }
-        let regex1=/^(?:\+91)?[0-9]{10}$/
-        if(!regex1.test(contactNumber))
-        {
-        toast.error("Invalid Contact Number",toastPayload)
-        setIsLoading(false)
-        return ;
-        }
-        let payload = {
-          contactNumber,
-          password,
-        };
-
-        console.log("response maar re bass")
-        const response = await axios.post(
-          `${SERVER_URL}/api/v1/admin/loginAdmin`,
-          payload,axiosConfig
-        );
-
-        console.log("response received from python", response);
-
+      if (password.length < 6) {
+        toast.error("Password should be atleast of 6 ", toastPayload);
         setIsLoading(false);
-        if (response.data.success === true) {
-          // navigate("/driver/login")
-          console.log("sign in before");
-          toast.success("Sign In Successful", toastPayload);
-          console.log("sign in after");
-          //localStorage.setItem("id", response.data.bus);
-          //setBusId(response.data.bus);
-          navigate("/driver/dashboard");
-        } else {
-          toast.error("Admin not found", toastPayload);
-          console.log("Either Password is wrong or you have not registered");
-        }
+        return;
+      }
+      let regex1 = /^(?:\+91)?[0-9]{10}$/;
+      if (!regex1.test(contactNumber)) {
+        toast.error("Invalid Contact Number", toastPayload);
+        setIsLoading(false);
+        return;
+      }
+      let payload = {
+        contactNumber,
+        password,
+      };
+
+      console.log("response maar re bass");
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/admin/loginAdmin`,
+        payload,
+        axiosConfig
+      );
+
+      console.log("response received from python", response);
+
+      setIsLoading(false);
+      if (response.data.success === true) {
+        // navigate("/driver/login")
+        console.log("sign in before");
+        toast.success("Sign In Successful", toastPayload);
+        console.log("sign in after");
+        //localStorage.setItem("id", response.data.bus);
+        //setBusId(response.data.bus);
+        navigate("/app/adminDashboard");
+      } else {
+        toast.error("Admin not found", toastPayload);
+        console.log("Either Password is wrong or you have not registered");
       }
     }
+  }
   return (
     <>
       <div className="flex flex-col mt-5 h-[100vh] rounded-lg items-center justify-center my-12">
@@ -120,13 +118,30 @@ function LoginAdmin() {
           </div>
 
           <div className="flex bg-white border border-black w-[290px] h-[50px] justify-between items-center rounded-lg p-2 shadow-xl relative group">
-                 <input type={toggle} id="password" value={password}  className="placeholder-black focus:outline-none" onChange={(e)=>setPassword(e.target.value)}/>
-                   {password==""?(
-                <label htmlFor="password" class="ml-[8px] transform transition-all absolute top-0 left-0 h-full flex items-center pl-2 text-lg group-focus-within:text-xs peer-valid:text-xs group-focus-within:h-1/2 peer-valid:h-1/2 group-focus-within:-translate-y-[2px] peer-valid:-translate-y-full group-focus-within:pl-0 peer-valid:pl-0">Password</label>):(<label for="busNumber" className="hidden">Password</label>)}
-                    <button onClick={viewPassword} className="">{toggle === "password"? <PasswordSVG />:<HidePasswordSVG />}</button>
-                </div>
+            <input
+              type={toggle}
+              id="password"
+              value={password}
+              className="placeholder-black focus:outline-none"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {password == "" ? (
+              <label
+                htmlFor="password"
+                class="ml-[8px] transform transition-all absolute top-0 left-0 h-full flex items-center pl-2 text-lg group-focus-within:text-xs peer-valid:text-xs group-focus-within:h-1/2 peer-valid:h-1/2 group-focus-within:-translate-y-[2px] peer-valid:-translate-y-full group-focus-within:pl-0 peer-valid:pl-0"
+              >
+                Password
+              </label>
+            ) : (
+              <label for="busNumber" className="hidden">
+                Password
+              </label>
+            )}
+            <button onClick={viewPassword} className="">
+              {toggle === "password" ? <PasswordSVG /> : <HidePasswordSVG />}
+            </button>
+          </div>
 
-          
           <div className="flex flex-col items-center justify-center mt-12">
             <h1 className="text-[#717171] text-[15px] mt-10">
               Don't have an account ?{" "}

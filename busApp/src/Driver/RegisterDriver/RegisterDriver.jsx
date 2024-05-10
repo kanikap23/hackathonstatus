@@ -48,51 +48,9 @@ function RegisterDriver() {
       busNumberPlate !== "" &&
       name !== "" &&
       contact !== "" &&
-      password !== "" && fileDetails !== ""
+      password !== ""
     ) {
       setIsLoading(true);
-      //checking for password length
-      if(password.length < 6)
-      {
-        toast.error("Password should be atleast of 6 ",toastPayload)
-        setIsLoading(false)
-        return ;
-      }
-
-      //checking for contact number
-      let regex1=/^(?:\+91)?[0-9]{10}$/
-      if(!regex1.test(contact))
-      {
-        toast.error("Invalid Contact Number",toastPayload)
-        setIsLoading(false)
-        return ;
-      }
-
-      regex1=/^[A-Za-z\s']+$/
-      if(!regex1.test(name))
-      {
-        toast.error("Invalid Name",toastPayload)
-        setIsLoading(false)
-        return ;
-      }
-
-      regex1=/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/
-
-      if(!regex1.test(busNumberPlate))
-      {
-        toast.error("Incorrect Vehicle Number Plate",toastPayload)
-        setIsLoading(false)
-        return ;
-      }
-
-      regex1=/^[0-9]+$/
-      if(!regex1.test(busNumber))
-        {
-          toast.error("Incorrect Bus Number",toastPayload)
-          setIsLoading(false)
-          return ;
-        }
-
       let payload = {
         busNumber,
         busNumberPlate,
@@ -119,7 +77,7 @@ function RegisterDriver() {
         toast.error("Driver Already Registered !!", toastPayload);
       }
     } else {
-      return toast.error("Missing Fields Information", toastPayload);
+      toast.error("Missing Fields Information", toastPayload);
     }
   }
 
@@ -278,7 +236,7 @@ function RegisterDriver() {
               </div>
 
               <div className="flex flex-col items-center h-[0px] w-[290px] relative">
-                <div className="text-[16px] relative -left-[7rem]">Image:</div>
+                <div className="text-[19px] relative -left-[7rem] ">Image:</div>
                 <input
                   className="text-[#5F5E5E] pb-12 ml border-2 border-red-700 rounded-xl cursor-pointer w-[100%] file:h-12 mt-2"
                   type="file"
@@ -290,12 +248,12 @@ function RegisterDriver() {
               </div>
 
               <div className="flex flex-col items-center space-y-5 absolute bottom-6    ">
-                <h1 className="text-[15px]">
+                {/* <h1 className="text-[15px]">
                   Have an account already ?{" "}
                   <button onClick={changePage} className="text-[#E93F4B]">
                     Sign In
                   </button>
-                </h1>
+                </h1> */}
                 {isLoading ? (
                   <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-b-4 border-l-3 border-r-3 border-yellow-500 mx-auto"></div>
                 ) : (
