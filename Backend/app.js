@@ -8,9 +8,9 @@ import { createServer } from "http";
 //For Call
 import twilio from "twilio";
 //TODO: Jab chahiye tab Kholo isse nahi toh paise katenge
-// const YOUR_AUTH_TOKEN = "e6cb5eae2c8ad408eb9f5f59a7c3250c";
-// const YOUR_ACCOUNT_SID = "AC352763183ccb144550245e2828a6cc87";
-// const client = twilio(YOUR_ACCOUNT_SID, YOUR_AUTH_TOKEN);
+const YOUR_AUTH_TOKEN = "cd562ae5e39c7fab1e3d4ef383b71fc6";
+const YOUR_ACCOUNT_SID = "AC352763183ccb144550245e2828a6cc87";
+const client = twilio(YOUR_ACCOUNT_SID, YOUR_AUTH_TOKEN);
 const app = express();
 
 app.use(
@@ -54,13 +54,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("panicAlarm", (payload) => {
-    // client.calls
-    //   .create({
-    //     url: "http://demo.twilio.com/docs/voice.xml",
-    //     to: "+918126052440",
-    //     from: "+12532149315",
-    //   })
-    //   .then((call) => console.log(call.sid));
+    client.calls
+      .create({
+        url: "http://demo.twilio.com/docs/voice.xml",
+        to: "+918126052440",
+        from: "+12532149315",
+      })
+      .then((call) => console.log(call.sid));
     socket.broadcast.emit("sendAlarm", payload);
   });
 

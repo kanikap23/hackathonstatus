@@ -370,7 +370,7 @@ export function TrackVechicle() {
     return (
       <div className="w-[100vw] h-screen flex flex-col items-center font-lexend">
         <div className="mt-[40px]">
-          {/* <Map /> */}
+          <Map />
         </div>
         <h1 className="relative top-[30px] right-[60px] text-[#9A9A9A] text-[20px]">
           PASSENGER COUNT : <span className="text-[black]">{pc}/60</span>

@@ -12,6 +12,6 @@ const axiosConfig = {
     }
 }
 
-const adminAddress = "sujaldhiman2003s@gmail.com";
+const adminAddress = "sujaldhiman2003@gmail.com";
 
 export {SERVER_URL, axiosConfig, adminAddress,PYTHON_SERVER_URL};

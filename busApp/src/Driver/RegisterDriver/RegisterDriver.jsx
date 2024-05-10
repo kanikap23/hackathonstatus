@@ -58,8 +58,59 @@ function RegisterDriver() {
       busNumberPlate !== "" &&
       name !== "" &&
       contact !== "" &&
-      password !== ""
+      password !== "" && fileDetails !== ""
     ) {
+      setIsLoading(true);
+      //checking for password length
+      if(password.length < 6)
+      {
+        toast.error("Password should be atleast of 6 ",toastPayload)
+        setIsLoading(false)
+        return ;
+      }
+
+      //checking for contact number
+      let regex1=/^(?:\+91)?[0-9]{10}$/
+      if(!regex1.test(contact))
+      {
+        toast.error("Invalid Contact Number",toastPayload)
+        setIsLoading(false)
+        return ;
+      }
+
+      regex1=/^[A-Za-z\s']+$/
+      if(!regex1.test(name))
+      {
+        if(name.length < 3)
+        {
+        toast.error("Invalid Name",toastPayload)
+        setIsLoading(false)
+        return ;
+        }
+      }
+      if(name.length < 3)
+        {
+        toast.error("Invalid Name",toastPayload)
+        setIsLoading(false)
+        return ;
+        }
+      regex1=/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/
+
+      if(!regex1.test(busNumberPlate))
+      {
+        toast.error("Incorrect Vehicle Number Plate",toastPayload)
+        setIsLoading(false)
+        return ;
+      }
+
+      regex1=/^[0-9]+$/
+
+      if(!regex1.test(contact))
+      {
+          toast.error("Incorrect Bus Number it should contain digits",toastPayload)
+          setIsLoading(false)
+          return ;
+      }
       setIsLoading(true);
       let payload = {
         busNumber,
@@ -87,7 +138,7 @@ function RegisterDriver() {
         toast.error("Driver Already Registered !!", toastPayload);
       }
     } else {
-      toast.error("Missing Fields Information", toastPayload);
+      return toast.error("Missing Fields Information", toastPayload);
     }
   }
 
