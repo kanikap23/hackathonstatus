@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { SocketContext } from "../../Context/SocketContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { request_url } from "../../constant/constants";
 import axios from "axios";
 import Shimmer from "../../Shimmer/Shimmer";
@@ -39,6 +39,7 @@ function BusDashboard() {
   const [busRoute, setBusRoute] = useState();
   const [imageUrl, setImageUrl] = useState("");
   const [routeName, setRouteName] = useState();
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
   const busId = localStorage.getItem("id");
@@ -70,11 +71,25 @@ function BusDashboard() {
       className={"absolute top-0 left-0 bg-white w-full h-full overflow-hidden"}
     >
       <div className=" z-50 fixed w-full top-0 left-0 bg-[#E80202] h-[60px] flex items-center justify-center space-x-80 text-white text-3xl">
-        <Link to="/driver/dashboard">
+        <button
+          onClick={() => navigate("/driver/dashboard", { replace: true })}
+        >
           <span className={"font-bold"}>Home</span>
-        </Link>
-        <Link to={`/driver/sendLocation/${busId}`}>Monitor Location</Link>
-        <Link to={`/driver/setStatus/${busId}`}>Update Status</Link>
+        </button>
+        <button
+          onClick={() =>
+            navigate(`/driver/sendLocation/${busId}`, { replace: true })
+          }
+        >
+          Monitor Location
+        </button>
+        <button
+          onClick={() =>
+            navigate(`/driver/setStatus/${busId}`, { replace: true })
+          }
+        >
+          Update Status
+        </button>
       </div>
       <div className={"h-[60px]"}></div>
       <div className="mt-5 w-full h-[calc(100%-60px)] z-50">
@@ -124,7 +139,16 @@ function BusDashboard() {
 }
 
 function LeafletMap({ busRoute, busNumber }) {
-  console.log("inside leafleft ", busRoute);
+  const [mapLoader, setMapLoader] = useState();
+
+  // useEffect(()=>{
+  //   setTimeout(
+  //     ()=>{
+  //       setMapLoader(true)
+  //     },1000)
+  //   )
+  // },[])
+
   //For Static
   const [position, setPosition] = useState();
   //For Dynamic
