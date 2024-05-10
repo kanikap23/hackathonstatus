@@ -9,7 +9,6 @@ import './BusStatusStyles.css';
 
 function BusStatus()
 {
-
     const navigate=useNavigate()
     const {id}=useParams()
     const [name,setName]=useState("")
@@ -91,7 +90,6 @@ function BusStatus()
                     {/*<input type="text" value={destinationPoint}  onChange={(e)=>setDestinationPoint(e.target.value)} placeholder="Enter Destination Point"/>*/}
 
                     <button className={"absolute mt-[22%] w-[150px] h-[40px] border-2 rounded-[12px] bg-[#E01A27] text-white"} onClick={submitDetails}>Set Details</button>
-                    
                 </div>
             </div>
             <ToastContainer />
