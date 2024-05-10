@@ -22,7 +22,7 @@ export const register = async function (req, res) {
     }
 
     const existedDriver = await BUS.findOne({
-      $and: [{ busNumberPlate }, { contactInfo }],
+      $and: [{ busNumberPlate }, { contactInfo },{name},{busNumber}],
     });
 
     if (existedDriver) {
@@ -71,7 +71,11 @@ export const register = async function (req, res) {
       showUser,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log("ERROR MAI AAYA ",error.message);
+    return res.status(200).json({
+        success:false,
+        message:"Driver Already Exists"
+    })
   }
 };
 

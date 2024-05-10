@@ -72,20 +72,20 @@ function BusDashboard() {
     >
       <div className=" z-50 fixed w-full top-0 left-0 bg-[#E80202] h-[60px] flex items-center justify-center space-x-80 text-white text-3xl">
         <button
-          onClick={() => navigate("/driver/dashboard", { replace: true })}
+          onClick={() => navigate("../driver/dashboard", { replace: true })}
         >
           <span className={"font-bold"}>Home</span>
         </button>
         <button
           onClick={() =>
-            navigate(`/driver/sendLocation/${busId}`, { replace: true })
+            navigate(`../driver/sendLocation/${busId}`, { replace: true })
           }
         >
           Monitor Location
         </button>
         <button
           onClick={() =>
-            navigate(`/driver/setStatus/${busId}`, { replace: true })
+            navigate(`../driver/setStatus/${busId}`, { replace: true })
           }
         >
           Update Status

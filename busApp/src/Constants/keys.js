@@ -1,4 +1,4 @@
-const MAPS_KEY = "";
+const MAPS_KEY = "AIzaSyALB6uQiBGnyZAJMiS1MAT8ViJmRQea8W0";
 //AIzaSyALB6uQiBGnyZAJMiS1MAT8ViJmRQea8W0
 
 export { MAPS_KEY };

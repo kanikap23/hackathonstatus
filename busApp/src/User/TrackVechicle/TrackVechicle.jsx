@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useDeferredValue } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -17,11 +17,14 @@ import {
   axiosConfig,
   SERVER_URL,
 } from "../../Constants/config.js";
+import {io} from "socket.io-client"
 import { ToastContainer, Zoom, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toastPayload } from "../../Context/Assets";
 import stopAudio from "./stop.mp4";
 import { unmountComponentAtNode } from "react-dom";
+
+const socket1=io("http://192.168.137.63:8080")
 
 const MemoizedDirectionsRenderer = React.memo(({ directions }) => (
   <DirectionsRenderer options={{ directions: directions }} />
@@ -338,6 +341,7 @@ export function TrackVechicle() {
   const [dataReceived, setDataReceived] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [passenger, setPassenger] = useState(0);
+  const pc=useDeferredValue(passenger)
   async function getActiveBusDetails() {
     const response = await axios.get(
       `${SERVER_URL}/api/v1/activeBus/${id}`,
@@ -351,14 +355,14 @@ export function TrackVechicle() {
   }
 
   useEffect(() => {
-    console.log(`busLocation-${id}`);
-    getActiveBusDetails();
-  }, []);
+    socket1.on("message", (payload) => {
+      setPassenger(payload.data);
+    });
+  }, [passenger]);
 
   useEffect(() => {
-    socket.on("sendCountPassenger", (payload) => {
-      setPassenger(payload.countPassenger);
-    });
+    console.log(`busLocation-${id}`);
+    getActiveBusDetails();
   }, []);
 
   if (!isLoaded) return <h1>Loading...</h1>;
@@ -366,10 +370,10 @@ export function TrackVechicle() {
     return (
       <div className="w-[100vw] h-screen flex flex-col items-center font-lexend">
         <div className="mt-[40px]">
-          <Map />
+          {/* <Map /> */}
         </div>
         <h1 className="relative top-[30px] right-[60px] text-[#9A9A9A] text-[20px]">
-          PASSENGER COUNT : <span className="text-[black]">{passenger}/60</span>
+          PASSENGER COUNT : <span className="text-[black]">{pc}/60</span>
         </h1>
         <div className="flex h-[90vh] justify-between items-center w-[60%]">
           {isLoading ? (
