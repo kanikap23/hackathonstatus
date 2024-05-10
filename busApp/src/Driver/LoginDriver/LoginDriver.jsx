@@ -130,7 +130,7 @@ function LoginDriver() {
                 //     <button onClick={viewPassword} className="">{toggle === "password"? <PasswordSVG />:<HidePasswordSVG />}</button>
                 </div> */}
 
-          <div className="flex-col items-center justify-between w-[300px] ml-[10%] ">
+          <div className="flex-col items-center justify-between w-[300px] ml-[10%] mb-4">
             <div className=" h-[100%] w-[80%] flex relative">
               {imageSrc === "" && toggleImg === "Take Photo" ? (
                 <>
@@ -143,7 +143,7 @@ function LoginDriver() {
                   />
                 </>
               ) : (
-                <img src={imageSrc} className="" />
+                <img src={imageSrc} className="p w-[300px] aspect-video mb-4" />
               )}
             </div>
             {!webCamLoader && (
@@ -157,7 +157,7 @@ function LoginDriver() {
               </div>
             )}
           </div>
-          <div className="flex flex-col items-center justify-center mt-12">
+          <div className="flex flex-col items-center justify-center mt-12 ">
             {/* <h1 className="text-[#717171] text-[15px] mt-10">
               Don't have an account ?{" "}
               <button onClick={changePage} className="text-[#E93F4B]">

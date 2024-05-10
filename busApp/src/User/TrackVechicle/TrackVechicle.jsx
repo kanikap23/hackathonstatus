@@ -45,15 +45,18 @@ const MemoizedDirectionsService = React.memo(
 );
 
 function PanicButton({ busDetails }) {
+  console.log("panic button ", busDetails);
   const { id } = useParams();
   let [latitude, setLatitude] = useState(0);
   let [longitude, setLongitude] = useState(0);
   let emergencyaudio = new Audio(stopAudio);
   const { socket } = useContext(SocketContext);
+  const [placeName, setPlaceName] = useState();
   const [panicDetails, setPanicDetails] = useState({
-    alertId: "",
+    alertBusNumber: "",
     alertLatitude: "",
     alertLongitude: "",
+    alertBusRoute: "",
     alertSignal: false,
   });
   const [audio, setAudio] = useState(null);
@@ -75,19 +78,31 @@ function PanicButton({ busDetails }) {
         .get(
           `https://api.geoapify.com/v1/geocode/reverse?lat=${payload.latitude}&lon=${payload.longitude}&apiKey=9ada7ada2093459b907a5a079ecf9718`
         )
-        .then((response) => console.log(response));
+        .then((response) => {
+          console.log("response fetched", response);
+          setPlaceName([
+            response.data.features[0].properties.address_line1,
+            response.data.features[0].properties.address_line2,
+          ]);
+          console.log(
+            "response.data.features[0].properties",
+            response.data.features[0].properties.address_line1,
+            response.data.features[0].properties.address_line2
+          );
+        });
       //api.geoapify.com/v1/geocode/reverse?lat=51.21709661403662&lon=6.7782883744862374&apiKey=9ada7ada2093459b907a5a079ecf9718", requestOptions
 
-      https: toast.warn("An Emergency Occured", {
+      toast.warn("An Emergency Occured", {
         autoClose: 1000,
         position: "top-center",
         theme: "dark",
       });
       setPanicDetails({
         ...panicDetails,
-        alertId: `${payload.id}`,
+        alertBusNumber: `${payload.busNumber}`,
         alertLatitude: `${payload.latitude}`,
         alertLongitude: `${payload.longitude}`,
+        alertBusRoute: `${payload.busRoute}`,
         alertSignal: true,
       });
 
@@ -100,7 +115,8 @@ function PanicButton({ busDetails }) {
   function panic() {
     console.log("pressed");
     let payload = {
-      id,
+      busNumber: busDetails.busNumber,
+      busRoute: busDetails.route.routeName,
       latitude,
       longitude,
     };
@@ -143,10 +159,20 @@ function PanicButton({ busDetails }) {
           {/* Changes */}
           {panicDetails.alertSignal === true ? (
             <div className="w-[350px] aspect-auto  bg-red-600 text-white absolute p-4 left-[45%] rounded-xl alert-blink">
-              <h1>Bus ID :-{panicDetails.alertId}</h1>
-              <h1>Alert Latitude :- {panicDetails.alertLatitude} </h1>
-              <h1>Alert Longitude :- {panicDetails.alertLongitude}</h1>
-              <h1></h1>
+              {console.log("panicDetails", panicDetails)}
+              <h1>Bus Number :- {panicDetails.alertBusNumber}</h1>
+              <h1>Bus Route :- {panicDetails.alertBusRoute}</h1>
+              {placeName && (
+                <div className="">
+                  <div className="flex ">
+                    <h1>Curr. Location:-</h1>
+                    <h1 className="ml-2">{placeName[0]}</h1>
+                  </div>
+                  <div>
+                    <h1>{placeName[1]}</h1>
+                  </div>
+                </div>
+              )}
               <div className="flex justify-center">
                 <button
                   onClick={() => {
@@ -317,6 +343,7 @@ export function TrackVechicle() {
       `${SERVER_URL}/api/v1/activeBus/${id}`,
       axiosConfig
     );
+    console.log("axios ");
     console.log(response.data.bus);
     // console.log(response.data.buses)
     setDataReceived(response.data.bus);

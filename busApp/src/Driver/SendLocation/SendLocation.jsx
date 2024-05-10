@@ -23,6 +23,7 @@ import axios from "axios";
 import { axiosConfig, SERVER_URL } from "../../Constants/config.js";
 import plus from "../../assets/plus.png";
 import minus from "../../assets/minus.png";
+import { toast } from "react-toastify";
 
 export const MemoizedDirectionsRenderer = React.memo(({ directions }) => (
   <DirectionsRenderer options={{ directions: directions }} />
@@ -232,7 +233,7 @@ export function Map() {
         console.log(payload);
         setDisplayWarn(payload.result);
       });
-  }, [displayWarn]);
+  }, [busRoute]);
 
   //function to pause  and resume GPS
   function monitorStatus(e) {
@@ -360,7 +361,7 @@ export function Map() {
               {toggle.toUpperCase()}
               {/* <div className="absolute inset-0 flex items-center justify-center bg-opacity-0 bg-white hover:bg-opacity-30 transition-opacity duration-100 opacity-0 active:opacity-100"> */}
             </button>
-            {displayWarn === "true" && <p>Agya me swagat karo </p>}
+            {/* {displayWarn === "true" && <p>Agya me swagat karo </p>} */}
             <button
               className="w-20 h-20 bg-red-700 border-2 border-red-700 rounded-full text-white focus:outline-none relative overflow-hidden transform transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-0.5 active:bg-red-700 active:scale-95 shadow-custom3"
               onClick={monitorStatus}
@@ -371,6 +372,7 @@ export function Map() {
             </button>
           </div>
         </div>
+        {displayWarn === "true" && toast.error("This didn't work.")}
       </div>
     </>
   );

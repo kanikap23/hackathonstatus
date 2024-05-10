@@ -18,6 +18,7 @@ const personIcon = new Icon({
 });
 
 import io from "socket.io-client";
+import { BusLoader } from "../../Driver/LoginDriver/LoginDriver.jsx";
 const socket = io("http://localhost:10000");
 
 function capitalizeFirstLetter(string) {
@@ -144,6 +145,7 @@ export function LookupVehicles() {
   const [busRoutes, setBusRoutes] = useState([]);
   const [route, setRoute] = useState();
   const [busNumberSelected, setBusNumberSelected] = useState(0);
+  const [pageLoader, setPageLoader] = useState(true);
   //waypoints
   const [waypoints, setWaypoints] = useState();
 
@@ -185,6 +187,15 @@ export function LookupVehicles() {
     getActiveBusDetails();
   }, []);
 
+  //For Page Loader for 3 sec
+  useEffect(() => {
+    if (pageLoader) {
+      setTimeout(() => {
+        setPageLoader(false);
+      }, 3000);
+    }
+  }, []);
+
   useEffect(() => {
     //TODO: for changes in bus coordinate fake
     // socket.on(`bus-${busNumberSelected}`, (data) => {
@@ -219,58 +230,68 @@ export function LookupVehicles() {
 
   return (
     <>
-      <RouteContext.Provider value={{ route, setRoute }}>
-        <div className="z-50 w-full top-0 left-0 bg-[#E80202] h-[60px] flex items-center justify-center space-x-80 text-white text-3xl">
-          <h1 className={"font-bold"}>Active Buses</h1>
+      {pageLoader ? (
+        <div className=" bg-slate-300 h-screen">
+          <div className=" h-max w-max animate-pulse">
+            <BusLoader />
+          </div>
         </div>
-        <div className={"flex flex-row justify-start"}>
-          <div className="">
-            <div>
-              <div className={"mt-5 ml-2"}>
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => {
-                    if (e.target.value === "") {
-                      setDataReceived(preserveData);
-                    }
-                    setSearch(e.target.value);
-                  }}
-                  className="bg-[#D9D9D9] w-[317px] px-4 py-2 text-1xl font-semibold rounded-tl-lg rounded-bl-lg outline-none"
-                />
-                <button
-                  className="px-4 py-2 text-1xl bg-[#E93F4B] text-white rounded-tr-lg rounded-br-lg"
-                  onClick={searchLocation}
-                >
-                  Search
-                </button>
+      ) : (
+        <RouteContext.Provider value={{ route, setRoute }}>
+          <div className="z-50 w-full top-0 left-0 bg-[#E80202] h-[60px] flex items-center justify-center space-x-80 text-white text-3xl">
+            <h1 className={"font-bold"}>Active Buses</h1>
+          </div>
+          <div className={"flex flex-row justify-start"}>
+            <div className="">
+              <div>
+                <div className={"mt-5 ml-2"}>
+                  <input
+                    type="text"
+                    value={search}
+                    placeholder="Your Station..."
+                    onChange={(e) => {
+                      if (e.target.value === "") {
+                        setDataReceived(preserveData);
+                      }
+                      setSearch(e.target.value);
+                    }}
+                    className="bg-[#D9D9D9] w-[317px] px-4 py-2 text-1xl font-semibold rounded-tl-lg rounded-bl-lg outline-none"
+                  />
+                  <button
+                    className="px-4 py-2 text-1xl bg-[#E93F4B] text-white rounded-tr-lg rounded-br-lg"
+                    onClick={searchLocation}
+                  >
+                    Search
+                  </button>
+                </div>
+              </div>
+              <div className="w-[440px] space-y-8 mt-10 overflow-y-scroll h-[480px]">
+                {isLoading ? (
+                  <h1 className="text-white"> Loading... </h1>
+                ) : (
+                  dataReceived.map((ele) => (
+                    <div key={ele._id} className=" cursor-pointer">
+                      <Card
+                        driverName={ele.driver.name}
+                        busNumber={ele.busNumber}
+                        rating={ele.avgRating}
+                        route={ele.route}
+                        active={ele.busStatus}
+                        eta={ele.progress}
+                        objectId={ele._id}
+                        click={click}
+                      />
+                    </div>
+                  ))
+                )}
               </div>
             </div>
-            <div className="w-[440px] space-y-8 mt-10 overflow-y-scroll h-[480px]">
-              {isLoading ? (
-                <h1 className="text-white"> Loading... </h1>
-              ) : (
-                dataReceived.map((ele) => (
-                  <Card
-                    driverName={ele.driver.name}
-                    busNumber={ele.busNumber}
-                    rating={ele.avgRating}
-                    route={ele.route}
-                    active={ele.busStatus}
-                    eta={ele.progress}
-                    key={ele._id}
-                    objectId={ele._id}
-                    click={click}
-                  />
-                ))
-              )}
-            </div>
+            {/* {console.log("go", waypoints)} */}
+            {waypoints ? <LeafletMap waypoints={waypoints} /> : <LoadMap />}
+            {/* <LeafletMap waypoints={waypoints} /> */}
           </div>
-          {/* {console.log("go", waypoints)} */}
-          {waypoints ? <LeafletMap waypoints={waypoints} /> : <LoadMap />}
-          {/* <LeafletMap waypoints={waypoints} /> */}
-        </div>
-      </RouteContext.Provider>
+        </RouteContext.Provider>
+      )}
     </>
   );
 }

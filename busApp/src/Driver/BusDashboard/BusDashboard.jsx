@@ -38,6 +38,8 @@ function BusDashboard() {
   const [busStatus, setBusStatus] = useState("");
   const [busRoute, setBusRoute] = useState();
   const [imageUrl, setImageUrl] = useState("");
+  const [routeName, setRouteName] = useState();
+
   const [isLoading, setIsLoading] = useState(true);
   const busId = localStorage.getItem("id");
   // const { socket, busId, setBusId } = useContext(SocketContext);
@@ -46,7 +48,7 @@ function BusDashboard() {
   async function getDetails() {
     const response = await axios.get(request_url + `activeBus/${busId}`);
     const Data = response.data.bus;
-    console.log("response", response);
+    console.log("response", Data);
     setName(Data.driver.name);
     setContact(Data.driver.contactInfo);
     setBusNumber(Data.busNumber);
@@ -55,6 +57,7 @@ function BusDashboard() {
     setIsLoading(false);
     setImageUrl(response.data.bus.photo.secure_url);
     setBusRoute(Data.route);
+    setRouteName(Data.route.routeName);
   }
 
   useEffect(() => {
@@ -79,7 +82,7 @@ function BusDashboard() {
           <Shimmer></Shimmer>
         ) : (
           <div className="w-full h-full">
-            <div className="pt-40 fixed left-0 top-0 h-full bg-[#A8151F] text-white w-[520px] flex flex-col pl-20">
+            <div className="pt-28 fixed left-0 top-0 h-full bg-[#A8151F] text-white w-[520px] flex flex-col pl-20">
               <h1 className={"text-[22px]"}>Driver Name</h1>
               <h1 className={"mt-[-10px] mb-[20px] font-bold text-[40px]"}>
                 {name}
@@ -95,6 +98,10 @@ function BusDashboard() {
               <h1 className={"text-[22px]"}>Contact Number</h1>
               <h1 className={"mt-[-10px] mb-[20px] font-bold text-[40px]"}>
                 {contact}
+              </h1>
+              <h1 className={"text-[22px]"}>Your Route</h1>
+              <h1 className={"mt-[-10px] mb-[20px] font-bold text-[40px]"}>
+                {routeName}
               </h1>
               <div className="flex  items-center"></div>
             </div>
